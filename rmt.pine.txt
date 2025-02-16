@@ -1,0 +1,41 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © ilgar_t
+
+//@version=5
+indicator("time aval axar", overlay=false)
+
+// RSI settings 
+rsi_l = input(14, title="RSI Length")
+rsi_overbought = input(70, "RSI Overbought")
+rsi_oversold = input(30, "RSI Oversold")
+rsi_mid = input(50,"rsi middle line")
+rsi_source = input.source(defval=close, title="RSI Source")
+
+// RSI calculation 
+rsi_value = ta.rsi(rsi_source, rsi_l)
+
+// Moving Average settings
+ma_length = input.int(defval=20, title="MA Length")
+ma_source = input.source(defval=close, title="MA Source")
+sma_value = ta.sma(ma_source, ma_length)
+
+// Time conditions
+aval = input.int(defval=1, title="Aval")
+axar = input.int(defval=12, title="Axar")
+saat = (hour == aval)
+saatk = (hour == axar)
+
+// Background color changes
+bgcolor(saat ? color.new(color.red, 87) : na,force_overlay = true)
+bgcolor(saatk ? color.new(color.green, 87) : na,force_overlay = true)
+
+// Plot Moving Average on the main chart
+plot(sma_value, title="SMA", color=color.blue,force_overlay = true)
+
+// Plot RSI in a separate window
+plot(rsi_value, title="RSI", color=color.purple)
+
+// Overbought and Oversold levels
+hline(rsi_overbought, "Overbought", color=color.red)
+hline(rsi_oversold, "Oversold", color=color.green)
+hline(rsi_mid,"middle line",color.white)
